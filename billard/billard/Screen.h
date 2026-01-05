@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Button.h"
+#include "Table.h"
 
 class GUI;
 
@@ -41,6 +42,8 @@ public:
 class GameScreen : public Screen {
 private:
 	Button button_back;
+
+	Table table;
 
 private:
 	void populate_button();

@@ -4,7 +4,7 @@
 #include "Config.h"
 
 void GUI::start() {
-	InitWindow(ScreenS::ScreenWidth, ScreenS::ScreenHeight, "Tic_Tac_Toe");
+	InitWindow(ScreenS::ScreenWidth, ScreenS::ScreenHeight, "Billard");
 	SetTargetFPS(60);
 
 	std::unique_ptr<Screen> tmp_ptr = std::make_unique<MenuScreen>(*this);

@@ -10,5 +10,6 @@ My initial list of feature that I currently have plan for:
 - Implement different type/variation of billard such as 8-ball, 9-ball, maybe even some carom.
 - A training area, where player can set the ball
 - Replay system
+- Clock / Timer
 - Bots for difference variation
 - 2D and 3D?

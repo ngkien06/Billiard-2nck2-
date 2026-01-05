@@ -13,6 +13,8 @@ GUI& Screen::get_gui_ref() {
 	return gui_ref;
 }
 
+// --------------- <MenuScreen> ------------------------
+
 MenuScreen::MenuScreen(GUI& gui) : Screen(gui) {
 	button_play.rec = { 0, 5 * ScreenS::ScreenHeight / 8, ScreenS::ScreenWidth / 8, ScreenS::ScreenHeight / 18 };
 	button_play.rec.x = ScreenS::ScreenWidth / 2 - button_play.rec.width / 2;
@@ -63,6 +65,8 @@ void GameScreen::draw() {
 
 	// Draw divider at 6:4
 	DrawLineEx({ 6 * ScreenS::ScreenWidth / 10, 0 }, { 6 * ScreenS::ScreenWidth / 10, ScreenS::ScreenHeight }, 4, ScreenC::C[3]);
+
+	table.draw();
 }
 
 void GameScreen::update() {
