@@ -70,7 +70,7 @@ void GameScreen::draw() {
 }
 
 void GameScreen::update() {
-	handle_input();
+	table.update();
 }
 
 void GameScreen::handle_input() {
@@ -80,4 +80,6 @@ void GameScreen::handle_input() {
 		gui_ref.switch_screen(std::move(n_scr));
 		return;
 	}
+
+	table.handle_input();
 }

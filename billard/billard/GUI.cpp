@@ -14,8 +14,9 @@ void GUI::start() {
 		BeginDrawing();
 
 		if (curr_scr != nullptr) {
-			curr_scr->draw();
+			curr_scr->handle_input();
 			curr_scr->update();
+			curr_scr->draw();
 		}
 
 		EndDrawing();

@@ -6,12 +6,13 @@ Table::Table() {
 	rec.height = 7.0 * ScreenS::ScreenWidth / 8;
 	rec.x = 3 * ScreenS::ScreenWidth / 10 - rec.width / 2;
 	rec.y = 1 * ScreenS::ScreenHeight / 2 - rec.height / 2;
+	// 50 x 100 inches
 
 	Vector2 offset = { rec.x, rec.y };
 	baulk = Vector2Add(offset, { 0.0, 4 * rec.height / 5 });
 	apex = Vector2Add(offset, { rec.width / 2, rec.height / 4 });
 
-	// wall to the table
+	//  rail 
 	rail.thickness = 21 * ScreenS::ScreenHeight / 800;
 	rail.top = { offset.x, offset.y - rail.thickness, rec.width, rail.thickness };
 	rail.bottom = { offset.x, offset.y + rec.height, rec.width, rail.thickness };
@@ -19,10 +20,11 @@ Table::Table() {
 	rail.right = { offset.x + rec.width, offset.y, rail.thickness, rec.height };
 
 	rack();
+	cue_ball = CueBall(Vector2Add(apex, { 0.0, 3 * rec.height / 5 }));
 }
 
 void Table::rack() {
-	float radius = 63 * ScreenS::ScreenHeight / 6400;
+	float radius = Ball::get_radius();
 
 	std::vector<Vector2> preset;
 	preset.push_back(apex);
@@ -65,8 +67,14 @@ void Table::draw() {
 	rail.draw();
 
 	for (auto b : balls) { b.draw(); }
+	cue_ball.draw();
 }
 
 void Table::update() {
+	for (auto b : balls) { b.update(); }
+	cue_ball.update();
+}
 
+void Table::handle_input() {
+	cue_ball.handle_input();
 }

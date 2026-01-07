@@ -21,6 +21,8 @@ private:
 	} rail;
 
 	std::vector<Ball> balls;
+	// cue ball
+	CueBall cue_ball;
 
 private:
 	void rack();
@@ -29,8 +31,9 @@ public:
 	Table();
 
 public:
-	void draw();
+	void handle_input();
 	void update();
+	void draw();
 };
 
 #endif // !TABLE_H
