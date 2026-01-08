@@ -20,3 +20,7 @@ My initial list of feature that I currently have plan for:
 This `README.md` will serve as a personal log book, any meaningful update to the project will be stated here.
 
 * 8/1/2026: The cue ball can now be shoot and have actual collision with the rail. So this now resemble something that actually not useless/meaningless. 
+
+So one thing I learn about collision system, there 2 thing to remember when working a collision: 
+**make sure the 2 objects are seperated from eachother** (i.e. no overlapping) and
+**let the object reponse** (not the system set everything)
