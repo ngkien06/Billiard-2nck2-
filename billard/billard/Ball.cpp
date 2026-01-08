@@ -30,6 +30,7 @@ float Ball::radius = 0.0;
 
 void Ball::initialize_radius() {
 	radius = 63 * ScreenS::ScreenHeight / 6400;
+	printf("radius: %f\n\n", radius);
 	// 2.25 inches
 }
 
@@ -38,6 +39,8 @@ Ball::Ball(int id, Vector2 pos, Color c) : index(id), position(pos), color(c), s
 
 	if (radius == 0.0) { initialize_radius(); }
 }
+
+// --------
 
 Vector2 Ball::get_pos() {
 	return position;
@@ -58,7 +61,21 @@ void Ball::update() {
 	position.y += velocity.y * delta_time;
 }
 
-//------------- <CueBall> ------------
+// --------
+
+void Ball::displace_position(Vector2 vector, float distance) {
+	this->position = Vector2Add(this->position, Vector2Mul(vector, distance));
+}
+
+void Ball::bounce_horizontal() {
+	this->velocity.y = -(this->velocity.y);
+}
+
+void Ball::bounce_vertical() {
+	this->velocity.x = -(this->velocity.x);
+}
+
+// ----------------------------- <CueBall> ----------------------------
 
 float CueBall::MAX_SPEED = 0.0, CueBall::MIN_SPEED = 0.0;
 
@@ -73,6 +90,8 @@ CueBall::CueBall() : Ball(0, { 0, 0 }, WHITE), curr_action(cue_action::STATIONAR
 }
 
 CueBall::CueBall(Vector2 pos) : Ball(0, pos, WHITE), curr_action(cue_action::STATIONARY) {}
+
+// --------
 
 void CueBall::draw() {
 	Ball::draw();
@@ -92,6 +111,10 @@ void CueBall::draw() {
 			DrawLineEx(pos, Vector2Add(pos, v), 1.5, WHITE);
 		}
 	} // should this be here? or in Table::draw()
+
+
+
+	//printf("velocity: (%f, %f)\n", velocity.x, velocity.y);
 }
 
 void CueBall::handle_input() {
@@ -106,6 +129,8 @@ void CueBall::handle_input() {
 		break;
 	}
 	case cue_action::AIMING:
+		if (IsKeyPressed(KEY_C)) { curr_action = cue_action::STATIONARY; }
+
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) == false) { 
 			float d = std::min(distance(mouse, pos), 90.0f);
 			float speed = MIN_SPEED + (d / 90.0f) * (MAX_SPEED - MIN_SPEED);

@@ -28,6 +28,10 @@ public:
 
 	virtual void draw();
 	virtual void update();
+
+	void displace_position(Vector2 vector, float distance);
+	void bounce_vertical();
+	void bounce_horizontal();
 };
 
 class CueBall : public Ball {
@@ -46,7 +50,7 @@ public:
 	void handle_input();
 };
 
-// simply for ease of use
+// simply for ease of use -----------------------------------------
 
 // add 2 points/vectors
 Vector2 Vector2Add(Vector2 v1, Vector2 v2);

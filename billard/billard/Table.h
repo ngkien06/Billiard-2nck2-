@@ -5,6 +5,14 @@
 #include "raylib.h"
 
 #include "Ball.h"
+#include "Collision.h"
+
+struct Rail {
+	float thickness;
+	Rectangle top, bottom, left, right;
+
+	void draw();
+};
 
 class Table {
 private:
@@ -13,16 +21,13 @@ private:
 	Vector2 baulk;
 	Vector2 apex;
 
-	struct Rail {
-		float thickness;
-		Rectangle top, bottom, left, right;
-
-		void draw();
-	} rail;
+	Rail rail;
 
 	std::vector<Ball> balls;
 	// cue ball
 	CueBall cue_ball;
+
+	CollisionHandler collision_handler;
 
 private:
 	void rack();

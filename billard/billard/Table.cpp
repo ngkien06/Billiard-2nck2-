@@ -1,12 +1,22 @@
 #include "Config.h"
 #include "Table.h"
 
+void Rail::draw() {
+	DrawRectangleRec(top, ScreenC::C[2]);
+	DrawRectangleRec(bottom, ScreenC::C[2]);
+	DrawRectangleRec(left, ScreenC::C[2]);
+	DrawRectangleRec(right, ScreenC::C[2]);
+}
+
+// --------------------------
+
 Table::Table() {
 	rec.width = 3.5 * ScreenS::ScreenWidth / 8;
 	rec.height = 7.0 * ScreenS::ScreenWidth / 8;
 	rec.x = 3 * ScreenS::ScreenWidth / 10 - rec.width / 2;
 	rec.y = 1 * ScreenS::ScreenHeight / 2 - rec.height / 2;
 	// 50 x 100 inches
+	printf("table at (%f, %f) to (%f, %f)\n\n", rec.x, rec.y, rec.x + rec.width, rec.y + rec.height);
 
 	Vector2 offset = { rec.x, rec.y };
 	baulk = Vector2Add(offset, { 0.0, 4 * rec.height / 5 });
@@ -19,7 +29,7 @@ Table::Table() {
 	rail.left = { offset.x - rail.thickness, offset.y, rail.thickness, rec.height };
 	rail.right = { offset.x + rec.width, offset.y, rail.thickness, rec.height };
 
-	rack();
+	// rack();
 	cue_ball = CueBall(Vector2Add(apex, { 0.0, 3 * rec.height / 5 }));
 }
 
@@ -49,13 +59,6 @@ void Table::rack() {
 	}
 }
 
-void Table::Rail::draw() {
-	DrawRectangleRec(top, ScreenC::C[2]);
-	DrawRectangleRec(bottom, ScreenC::C[2]);
-	DrawRectangleRec(left, ScreenC::C[2]);
-	DrawRectangleRec(right, ScreenC::C[2]);
-}
-
 
 // ------------------------------------
 
@@ -73,6 +76,8 @@ void Table::draw() {
 void Table::update() {
 	for (auto b : balls) { b.update(); }
 	cue_ball.update();
+
+	collision_handler.handle_collision(rail, cue_ball);
 }
 
 void Table::handle_input() {
