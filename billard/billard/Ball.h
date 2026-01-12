@@ -19,6 +19,13 @@ protected:
 	static float radius;
 	void initialize_radius();
 
+	static float drag;
+	void initialize_drag();
+
+	// for debugging purposed
+	float time_travel = 0.0;
+	float distance_travel = 0.0;
+
 public:
 	Ball(int id, Vector2 pos, Color c);
 
@@ -47,6 +54,7 @@ public:
 
 public:
 	void draw() override;
+	void update() override;
 	void handle_input();
 };
 

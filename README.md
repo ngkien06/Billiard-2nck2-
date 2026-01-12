@@ -17,10 +17,22 @@ My initial list of feature that I currently have plan for:
 
 ## Logs
 
-This `README.md` will serve as a personal log book, any meaningful update to the project will be stated here.
+This will serve as a personal log book, any meaningful update to the project will be stated here.
 
 * 8/1/2026: The cue ball can now be shoot and have actual collision with the rail. So this now resemble something that actually not useless/meaningless. 
 
 So one thing I learn about collision system, there 2 thing to remember when working a collision: 
 **make sure the 2 objects are seperated from eachother** (i.e. no overlapping) and
 **let the object reponse** (not the system set everything)
+
+## Backlog
+
+This will serve as a list of small tasks, so I can just choose one if I want to.
+
+- Ball collision
+- Impact highlight
+- Direction indicator
+- Cue ball placing
+- Pocket graphic
+- Change the collision to Visitor pattern
+- Make that ball dimension come from the table, not screen

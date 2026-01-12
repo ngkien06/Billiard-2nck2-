@@ -16,6 +16,7 @@ Vector2 Vector2Mul(Vector2 v, float f) {
 }
 
 Vector2 Vector2Normalize(Vector2 v) {
+	if (v.x == 0.0 and v.y == 0.0) { return v; }
 	float t = sqrtf(v.x * v.x + v.y * v.y);
 	return Vector2Mul(v, 1 / t);
 }
@@ -27,6 +28,7 @@ float distance(Vector2 v1, Vector2 v2) {
 //------------- <Ball> ------------
 
 float Ball::radius = 0.0;
+float Ball::drag = 0.0;
 
 void Ball::initialize_radius() {
 	radius = 63 * ScreenS::ScreenHeight / 6400;
@@ -34,10 +36,16 @@ void Ball::initialize_radius() {
 	// 2.25 inches
 }
 
+void Ball::initialize_drag() {
+	drag = 1351 * ScreenS::ScreenHeight / 40000;
+	// 0.098 m/s^2 or 3.86 in/s^2 
+}
+
 Ball::Ball(int id, Vector2 pos, Color c) : index(id), position(pos), color(c), status(ball_status::ACTIVE) {
 	this->velocity = { 0.0, 0.0 };
 
 	if (radius == 0.0) { initialize_radius(); }
+	if (drag == 0.0) { initialize_drag(); }
 }
 
 // --------
@@ -57,6 +65,17 @@ void Ball::draw() {
 void Ball::update() {
 	float delta_time = GetFrameTime();
 
+	// update velocity
+	float new_velocity = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y);
+	new_velocity = std::max(0.f, new_velocity - Ball::drag * delta_time);
+	velocity = Vector2Mul(Vector2Normalize(velocity), new_velocity);
+	if (new_velocity > 0.0) {
+		printf("velocity: %f (%f, %f)\n", new_velocity, velocity.x, velocity.y);
+		this->distance_travel += new_velocity * delta_time;
+		this->time_travel += delta_time;
+	}
+
+	// update position
 	position.x += velocity.x * delta_time;
 	position.y += velocity.y * delta_time;
 }
@@ -117,6 +136,27 @@ void CueBall::draw() {
 	//printf("velocity: (%f, %f)\n", velocity.x, velocity.y);
 }
 
+void CueBall::update() {
+	Ball::update();
+
+	switch (curr_action)
+	{
+	case cue_action::MOVING:
+		if (velocity.x == 0.0 && velocity.y == 0.0) { 
+			curr_action = cue_action::STATIONARY;
+			printf("distance traveled: %f | time traveled: %f \n", this->distance_travel, this->time_travel);
+			distance_travel = 0.0; time_travel = 0.0;
+		}
+		break;
+	case cue_action::AIMING:
+		break;
+	case cue_action::PLACING:
+		break;
+	default:
+		break;
+	}
+}
+
 void CueBall::handle_input() {
 	Vector2 mouse = GetMousePosition();
 	Vector2 pos = get_pos();
@@ -142,7 +182,6 @@ void CueBall::handle_input() {
 
 			curr_action = cue_action::MOVING; 
 		} 
-		// will be change when i can actually shoot the ball 
 		break;
 	case cue_action::PLACING:
 		break;

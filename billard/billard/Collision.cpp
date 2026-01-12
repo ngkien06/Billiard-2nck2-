@@ -32,6 +32,5 @@ void CollisionHandler::handle_collision(Rail rail, Ball& ball) {
 		ball.displace_position(normal, penetration_depth);
 		
 		ball.bounce_vertical();
-		printf("bounce at (%f, %f)\n", b_pos.x, b_pos.y);
 	}
 }
