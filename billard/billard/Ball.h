@@ -19,12 +19,17 @@ protected:
 	static float radius;
 	void initialize_radius();
 
-	static float drag;
+	static float drag_rolling;
 	void initialize_drag();
+
+	// cor: coefficient of restitution, is dimentionless
+	static float cor_rail, cor_ball;
 
 	// for debugging purposed
 	float time_travel = 0.0;
 	float distance_travel = 0.0;
+
+	void set_velocity_vector(float v);
 
 public:
 	Ball(int id, Vector2 pos, Color c);

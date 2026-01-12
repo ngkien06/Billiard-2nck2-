@@ -28,7 +28,9 @@ float distance(Vector2 v1, Vector2 v2) {
 //------------- <Ball> ------------
 
 float Ball::radius = 0.0;
-float Ball::drag = 0.0;
+float Ball::drag_rolling = 0.0;
+float Ball::cor_rail = 0.6; 
+float Ball::cor_ball = 0.98;
 
 void Ball::initialize_radius() {
 	radius = 63 * ScreenS::ScreenHeight / 6400;
@@ -37,7 +39,7 @@ void Ball::initialize_radius() {
 }
 
 void Ball::initialize_drag() {
-	drag = 1351 * ScreenS::ScreenHeight / 40000;
+	drag_rolling = 1351 * ScreenS::ScreenHeight / 40000;
 	// 0.098 m/s^2 or 3.86 in/s^2 
 }
 
@@ -45,7 +47,7 @@ Ball::Ball(int id, Vector2 pos, Color c) : index(id), position(pos), color(c), s
 	this->velocity = { 0.0, 0.0 };
 
 	if (radius == 0.0) { initialize_radius(); }
-	if (drag == 0.0) { initialize_drag(); }
+	if (drag_rolling == 0.0) { initialize_drag(); }
 }
 
 // --------
@@ -67,8 +69,9 @@ void Ball::update() {
 
 	// update velocity
 	float new_velocity = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y);
-	new_velocity = std::max(0.f, new_velocity - Ball::drag * delta_time);
-	velocity = Vector2Mul(Vector2Normalize(velocity), new_velocity);
+	new_velocity = std::max(0.f, new_velocity - Ball::drag_rolling * delta_time);
+	set_velocity_vector(new_velocity);
+
 	if (new_velocity > 0.0) {
 		printf("velocity: %f (%f, %f)\n", new_velocity, velocity.x, velocity.y);
 		this->distance_travel += new_velocity * delta_time;
@@ -82,16 +85,26 @@ void Ball::update() {
 
 // --------
 
+void Ball::set_velocity_vector(float v) {
+	this->velocity = Vector2Mul(Vector2Normalize(this->velocity), v);
+}
+
 void Ball::displace_position(Vector2 vector, float distance) {
 	this->position = Vector2Add(this->position, Vector2Mul(vector, distance));
 }
 
 void Ball::bounce_horizontal() {
 	this->velocity.y = -(this->velocity.y);
+	
+	float new_velocity = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y) * Ball::cor_rail;
+	set_velocity_vector(new_velocity);
 }
 
 void Ball::bounce_vertical() {
 	this->velocity.x = -(this->velocity.x);
+
+	float new_velocity = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y) * Ball::cor_rail;
+	set_velocity_vector(new_velocity);
 }
 
 // ----------------------------- <CueBall> ----------------------------
