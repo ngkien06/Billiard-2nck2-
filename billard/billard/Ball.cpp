@@ -43,11 +43,13 @@ void Ball::initialize_drag() {
 	// 0.147 m/s^2 or 5.79 in/s^2 
 }
 
-Ball::Ball(int id, Vector2 pos, Color c) : index(id), position(pos), color(c), status(ball_status::ACTIVE) {
+Ball::Ball(int id, Vector2 pos, Color c) : index(id), position(pos), color(c), status(ball_status::ACTIVE), trace(Trace(c)) {
 	this->velocity = { 0.0, 0.0 };
 
 	if (radius == 0.0) { initialize_radius(); }
 	if (drag_rolling == 0.0) { initialize_drag(); }
+
+	trace.set_thickness(Ball::radius);
 }
 
 // --------
@@ -62,9 +64,13 @@ float Ball::get_radius() {
 
 void Ball::draw() {
 	DrawCircleV(position, radius, color);
+	
+	trace.draw();
 }
 
 void Ball::update() {
+	if (velocity.x == 0.0 && velocity.y == 0.0) { return; } // if not moving, nothing to update
+
 	float delta_time = GetFrameTime();
 
 	// update velocity
@@ -82,6 +88,10 @@ void Ball::update() {
 	// update position
 	position.x += velocity.x * delta_time;
 	position.y += velocity.y * delta_time;
+
+	// trace
+	if (new_velocity > 0) { trace.add_point(position); }
+	else { trace.clear(); }
 }
 
 // --------

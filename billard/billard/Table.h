@@ -29,7 +29,7 @@ private:
 	Vector2 apex;
 
 	Rail rail;
-	Pocket pocket;
+	//Pocket pocket;
 
 	std::vector<Ball> balls;
 	// cue ball

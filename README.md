@@ -36,6 +36,7 @@ This will serve as a list of small tasks, so I can just choose one if I want to.
 - Direction indicator
 - Ghost ball 
 - Cue ball placing
+- Tracer
 - Change Rail struct, so the side have 2 part
 - Triangle (for rail)
 - Triangle collision

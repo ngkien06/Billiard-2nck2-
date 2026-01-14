@@ -3,6 +3,8 @@
 
 #include "raylib.h"
 
+#include "Trace.h"
+
 enum class ball_status { ACTIVE, POCKETED };
 enum class cue_action { STATIONARY, MOVING, AIMING, PLACING };
 
@@ -13,6 +15,8 @@ protected:
 	Vector2 position; // in the whole screen
 	Vector2 velocity;
 	Color color;
+	
+	Trace trace;
 
 	ball_status status;
 
