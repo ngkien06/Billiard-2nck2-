@@ -34,13 +34,13 @@ float Ball::cor_ball = 0.98;
 
 void Ball::initialize_radius() {
 	radius = 63 * ScreenS::ScreenHeight / 6400;
-	printf("radius: %f\n\n", radius);
+	printf("radius: %f\n", radius);
 	// 2.25 inches
 }
 
 void Ball::initialize_drag() {
-	drag_rolling = 1351 * ScreenS::ScreenHeight / 40000;
-	// 0.098 m/s^2 or 3.86 in/s^2 
+	drag_rolling = 4053 * ScreenS::ScreenHeight / 80000;
+	// 0.147 m/s^2 or 5.79 in/s^2 
 }
 
 Ball::Ball(int id, Vector2 pos, Color c) : index(id), position(pos), color(c), status(ball_status::ACTIVE) {
@@ -72,8 +72,9 @@ void Ball::update() {
 	new_velocity = std::max(0.f, new_velocity - Ball::drag_rolling * delta_time);
 	set_velocity_vector(new_velocity);
 
+	// for debugging purposes
 	if (new_velocity > 0.0) {
-		printf("velocity: %f (%f, %f)\n", new_velocity, velocity.x, velocity.y);
+		//printf("velocity: %f (%f, %f)\n", new_velocity, velocity.x, velocity.y);
 		this->distance_travel += new_velocity * delta_time;
 		this->time_travel += delta_time;
 	}

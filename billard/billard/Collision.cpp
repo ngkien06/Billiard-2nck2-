@@ -19,16 +19,16 @@ void CollisionHandler::handle_collision(Rail rail, Ball& ball) {
 
 		ball.bounce_horizontal();
 	}
-	if (CheckCollisionCircleRec(b_pos, r, rail.left)) {
+	if (CheckCollisionCircleRec(b_pos, r, rail.left1) || CheckCollisionCircleRec(b_pos, r, rail.left2)) {
 		Vector2 normal = { 1.0, 0.0 };
-		float penetration_depth = (rail.left.x + rail.thickness) - b_pos.x + r;
+		float penetration_depth = (rail.left1.x + rail.thickness) - b_pos.x + r;
 		ball.displace_position(normal, penetration_depth);
 		
 		ball.bounce_vertical();
 	}
-	if (CheckCollisionCircleRec(b_pos, r, rail.right)) {
+	if (CheckCollisionCircleRec(b_pos, r, rail.right1) || CheckCollisionCircleRec(b_pos, r, rail.right2)) {
 		Vector2 normal = { -1.0, 0.0 };
-		float penetration_depth = b_pos.x - (rail.right.x) + r;
+		float penetration_depth = b_pos.x - (rail.right1.x) + r;
 		ball.displace_position(normal, penetration_depth);
 		
 		ball.bounce_vertical();

@@ -9,7 +9,14 @@
 
 struct Rail {
 	float thickness;
-	Rectangle top, bottom, left, right;
+	Rectangle top, bottom, left1, left2 , right1, right2;
+
+	void draw();
+};
+
+struct Pocket {
+	std::pair<float, float> openings; // first: corner | second: side
+	Vector2 pos[6]; // 0: top left | 1: top right | 2: middle left | 3: middle right | 4: bottom left | 5: bottom right
 
 	void draw();
 };
@@ -22,6 +29,7 @@ private:
 	Vector2 apex;
 
 	Rail rail;
+	Pocket pocket;
 
 	std::vector<Ball> balls;
 	// cue ball
