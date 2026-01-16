@@ -85,13 +85,13 @@ void Ball::update() {
 		this->time_travel += delta_time;
 	}
 
-	// update position
-	position.x += velocity.x * delta_time;
-	position.y += velocity.y * delta_time;
-
 	// trace
 	if (new_velocity > 0) { trace.add_point(position); }
 	else { trace.clear(); }
+
+	// update position
+	position.x += velocity.x * delta_time;
+	position.y += velocity.y * delta_time;
 }
 
 // --------

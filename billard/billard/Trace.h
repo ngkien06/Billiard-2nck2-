@@ -11,7 +11,8 @@ private:
 	Color color;
 	float thickness = 7.f;
 
-	static int limit; // only record n points max
+	int limit = 50; // only record n points max
+	bool debug_mode = true;
 
 public:
 	Trace(Color c);

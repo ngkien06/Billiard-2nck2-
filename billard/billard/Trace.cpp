@@ -1,7 +1,5 @@
 #include "Trace.h"
 
-int Trace::limit = 50;
-
 Trace::Trace(Color c) {
 	color = { c.r, c.g, c.b, (unsigned char)(c.a * 0.6) };
 }
@@ -13,6 +11,7 @@ void Trace::set_thickness(float th) {
 void Trace::add_point(Vector2 pt) {
 	points.push_back(pt);
 	
+	if (debug_mode == true) { return; }
 	if (points.size() > limit) { points.erase(points.begin()); }
 }
 
