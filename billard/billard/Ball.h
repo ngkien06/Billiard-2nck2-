@@ -5,8 +5,7 @@
 
 #include "Trace.h"
 
-enum class ball_status { ACTIVE, POCKETED };
-enum class cue_action { STATIONARY, MOVING, AIMING, PLACING };
+enum class ball_status { STATIONARY, MOVING, AIMING, PLACING, POCKETED };
 
 class Ball {
 protected:
@@ -52,8 +51,6 @@ public:
 
 class CueBall : public Ball {
 private:
-	cue_action curr_action;
-
 	static float MAX_SPEED, MIN_SPEED;
 	void initialize_speed();
 

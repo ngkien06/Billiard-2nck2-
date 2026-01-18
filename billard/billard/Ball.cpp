@@ -43,7 +43,7 @@ void Ball::initialize_drag() {
 	// 0.147 m/s^2 or 5.79 in/s^2 
 }
 
-Ball::Ball(int id, Vector2 pos, Color c) : index(id), position(pos), color(c), status(ball_status::ACTIVE), trace(Trace(c)) {
+Ball::Ball(int id, Vector2 pos, Color c) : index(id), position(pos), color(c), status(ball_status::STATIONARY), trace(Trace(c)) {
 	this->velocity = { 0.0, 0.0 };
 
 	if (radius == 0.0) { initialize_radius(); }
@@ -69,29 +69,47 @@ void Ball::draw() {
 }
 
 void Ball::update() {
-	if (velocity.x == 0.0 && velocity.y == 0.0) { return; } // if not moving, nothing to update
-
 	float delta_time = GetFrameTime();
 
-	// update velocity
-	float new_velocity = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y);
-	new_velocity = std::max(0.f, new_velocity - Ball::drag_rolling * delta_time);
-	set_velocity_vector(new_velocity);
+	switch (status)	{
+	case ball_status::STATIONARY:
+		trace.update();
+		break;
+	case ball_status::MOVING: {
+		// update velocity
+		float new_velocity = sqrtf(velocity.x * velocity.x + velocity.y * velocity.y);
+		new_velocity = std::max(0.f, new_velocity - Ball::drag_rolling * delta_time);
+		set_velocity_vector(new_velocity);
 
-	// for debugging purposes
-	if (new_velocity > 0.0) {
-		//printf("velocity: %f (%f, %f)\n", new_velocity, velocity.x, velocity.y);
-		this->distance_travel += new_velocity * delta_time;
-		this->time_travel += delta_time;
+		// for debugging purposes
+		if (new_velocity > 0.0) {
+			//printf("velocity: %f (%f, %f)\n", new_velocity, velocity.x, velocity.y);
+			this->distance_travel += new_velocity * delta_time;
+			this->time_travel += delta_time;
+		}
+
+		// trace
+		if (new_velocity > 0) {
+			trace.add_point(position);
+			trace.update();
+		}
+		else { trace.dissipate(); }
+
+		// update position
+		position.x += velocity.x * delta_time;
+		position.y += velocity.y * delta_time;
+
+		if (velocity.x == 0.0 && velocity.y == 0.0) {
+			status = ball_status::STATIONARY;
+			printf("distance traveled: %f | time traveled: %f \n", this->distance_travel, this->time_travel);
+			distance_travel = 0.0; time_travel = 0.0;
+		}
+
+		break;
 	}
-
-	// trace
-	if (new_velocity > 0) { trace.add_point(position); }
-	else { trace.clear(); }
-
-	// update position
-	position.x += velocity.x * delta_time;
-	position.y += velocity.y * delta_time;
+	default:
+		break;
+	}
 }
 
 // --------
@@ -128,18 +146,18 @@ void CueBall::initialize_speed() {
 	// 0.45 m/s - 5 m/s or 17.7 in/s - 196.8 in/s
 }
 
-CueBall::CueBall() : Ball(0, { 0, 0 }, WHITE), curr_action(cue_action::STATIONARY) {
+CueBall::CueBall() : Ball(0, { 0, 0 }, WHITE) {
 	if (MIN_SPEED == MAX_SPEED) { initialize_speed(); } // a bit nonsense, but i just need it to run once
 }
 
-CueBall::CueBall(Vector2 pos) : Ball(0, pos, WHITE), curr_action(cue_action::STATIONARY) {}
+CueBall::CueBall(Vector2 pos) : Ball(0, pos, WHITE) {}
 
 // --------
 
 void CueBall::draw() {
 	Ball::draw();
 
-	if (curr_action == cue_action::AIMING) {
+	if (status == ball_status::AIMING) {
 		Vector2 mouse = GetMousePosition();
 		Vector2 pos = get_pos();
 
@@ -162,38 +180,21 @@ void CueBall::draw() {
 
 void CueBall::update() {
 	Ball::update();
-
-	switch (curr_action)
-	{
-	case cue_action::MOVING:
-		if (velocity.x == 0.0 && velocity.y == 0.0) { 
-			curr_action = cue_action::STATIONARY;
-			printf("distance traveled: %f | time traveled: %f \n", this->distance_travel, this->time_travel);
-			distance_travel = 0.0; time_travel = 0.0;
-		}
-		break;
-	case cue_action::AIMING:
-		break;
-	case cue_action::PLACING:
-		break;
-	default:
-		break;
-	}
 }
 
 void CueBall::handle_input() {
 	Vector2 mouse = GetMousePosition();
 	Vector2 pos = get_pos();
 
-	switch (curr_action) {
-	case cue_action::STATIONARY: {
+	switch (status) {
+	case ball_status::STATIONARY: {
 		if (CheckCollisionPointCircle(mouse, pos, get_radius()) and IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-			curr_action = cue_action::AIMING;
+			status = ball_status::AIMING;
 		}
 		break;
 	}
-	case cue_action::AIMING:
-		if (IsKeyPressed(KEY_C)) { curr_action = cue_action::STATIONARY; }
+	case ball_status::AIMING:
+		if (IsKeyPressed(KEY_C)) { status = ball_status::STATIONARY; }
 
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) == false) { 
 			float d = std::min(distance(mouse, pos), 90.0f);
@@ -204,10 +205,10 @@ void CueBall::handle_input() {
 			v = Vector2Mul(v, speed);
 			this->velocity = v;
 
-			curr_action = cue_action::MOVING; 
+			status = ball_status::MOVING;
 		} 
 		break;
-	case cue_action::PLACING:
+	case ball_status::PLACING:
 		break;
 	default:
 		break;
