@@ -5,18 +5,19 @@
 #include "raylib.h"
 
 #include "Ball.h"
+#include "Utility.h"
 #include "Collision.h"
 
-struct Rail {
+struct Rail { // should be rails
 	float thickness;
 	Rectangle top, bottom, left1, left2 , right1, right2;
+	Triangle triangles[12];
 
 	void draw();
 };
 
 struct Pocket {
-	std::pair<float, float> openings; // first: corner | second: side
-	Vector2 pos[6]; // 0: top left | 1: top right | 2: middle left | 3: middle right | 4: bottom left | 5: bottom right
+	Vector2 pos; 
 
 	void draw();
 };
@@ -29,7 +30,7 @@ private:
 	Vector2 apex;
 
 	Rail rail;
-	//Pocket pocket;
+	//Pocket pocket; // 0: top left | 1: top right | 2: middle left | 3: middle right | 4: bottom left | 5: bottom right
 
 	std::vector<Ball> balls;
 	// cue ball
