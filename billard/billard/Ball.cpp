@@ -142,7 +142,7 @@ void CueBall::draw() {
 		Vector2 mouse = GetMousePosition();
 		Vector2 pos = get_pos();
 
-		if (distance(mouse, pos) <= 90.0) { // 90 is max length, if change also change in handle_input
+		if (DistancePointToPoint(mouse, pos) <= 90.0) { // 90 is max length, if change also change in handle_input
 			DrawLineEx(pos, mouse, 1.5, WHITE);
 		}
 		else {
@@ -151,6 +151,13 @@ void CueBall::draw() {
 			v = Vector2Mul(v, 90.0);
 
 			DrawLineEx(pos, Vector2Add(pos, v), 1.5, WHITE);
+			if (debug_mode == true) {
+				Vector2 v_temp = Vector2Mul(v, -10);
+				DrawLineEx(pos, Vector2Add(pos, v_temp), 1.5, WHITE);
+
+				DrawCircleV(Vector2Add(pos, v), 3.0f, RED);
+				DrawCircleV(Vector2Add(pos, v_temp), 3.0f, GREEN);
+			}
 		}
 	} // should this be here? or in Table::draw()
 
@@ -178,7 +185,7 @@ void CueBall::handle_input() {
 		if (IsKeyPressed(KEY_C)) { status = ball_status::STATIONARY; }
 
 		if (IsMouseButtonDown(MOUSE_LEFT_BUTTON) == false) { 
-			float d = std::min(distance(mouse, pos), 90.0f);
+			float d = std::min(DistancePointToPoint(mouse, pos), 90.0f);
 			float speed = MIN_SPEED + (d / 90.0f) * (MAX_SPEED - MIN_SPEED);
 
 			Vector2 v = Vector2Add(pos, Vector2Mul(mouse, -1.0));

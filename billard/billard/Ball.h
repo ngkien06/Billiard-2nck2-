@@ -54,6 +54,8 @@ private:
 	static float MAX_SPEED, MIN_SPEED;
 	void initialize_speed();
 
+	bool debug_mode = true;
+
 public:
 	CueBall();
 	CueBall(Vector2 pos);

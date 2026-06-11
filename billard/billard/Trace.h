@@ -15,7 +15,7 @@ private:
 	bool is_dissipate = false;
 	float accum_time = 0.0;
 
-	bool debug_mode = false;
+	bool debug_mode = true;
 
 public:
 	Trace(Color c);

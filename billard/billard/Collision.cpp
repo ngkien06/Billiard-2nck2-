@@ -33,4 +33,17 @@ void CollisionHandler::handle_collision(Rail rail, Ball& ball) {
 		
 		ball.bounce_vertical();
 	}
+
+
+	for (int i = 0; i < 12; i++) {
+		if (CheckCollisionCircleTriangle(b_pos, r, rail.triangles[i])) {
+			Vector2 direction = Vector2Normalize({ 
+				rail.triangles[i].p2.x - rail.triangles[i].p3.x,  
+				rail.triangles[i].p2.y - rail.triangles[i].p3.y 
+			});
+			Vector2 normal = { direction.y, -direction.x };
+
+			printf("triangle collide: %d\n", i);
+		}
+	}
 }
